@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>画像を検索</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+</head>
+<body>
+<form action="/search" class="container-fluid row align-items-center g-0 pt-3 pb-3 sticky-top bg-light" style="opacity: 0.8">
+	<div class="col col-sm-2 form-check">
+		<label><input type="checkbox" name="photo" th:checked="${param.photo != null}">写真</label>
+	</div>
+	<div class="col col-sm-2 form-check">
+		<label><input type="checkbox" name="illust" th:checked="${param.illust != null}">イラスト</label>
+	</div>
+	<div class="col col-sm-2 form-check">
+		<label><input type="checkbox" name="icon" th:checked="${param.icon != null}">アイコン</label>
+	</div>
+	<div class="col-sm-6">
+		<div class="input-group">
+			<input type="text" name="q" th:value="${param.q}">
+			<button>検索</button>
+		</div>
+	</div>
+</form>
+<div class="accordion accordion-flush container-md" id="accordion" th:if="${mapOfThumbnailList != null}">
+	<div class="accordion-item" th:each="thumbnailListEntry: ${mapOfThumbnailList.entrySet()}">
+		<h2 class="accordion-header" th:id="'heading-' + ${thumbnailListEntry.key}">
+			<button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" th:data-bs-target="'#collapse-' + ${thumbnailListEntry.key}" aria-expanded="false" th:aria-controls="'collapse-' + ${thumbnailListEntry.key}">
+				[[${thumbnailListEntry.key}]]
+			</button>
+		</h2>
+		<div th:id="'collapse-' + ${thumbnailListEntry.key}" class="accordion-collapse collapse" th:aria-labelledby="'heading-' + ${thumbnailListEntry.key}" data-bs-parent="#accordion">
+			<div class="accordion-body row row-cols-2 row-cols-sm-4">
+				<div class="col" th:each="thumbnail: ${thumbnailListEntry.value}">
+					<a class="card" th:href="${thumbnail.href}" target="_blank">
+						<img class="card-img-top" th:src="${thumbnail.src}">
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
